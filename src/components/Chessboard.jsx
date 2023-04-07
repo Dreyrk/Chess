@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import pawnw from "../assets/pawn_w.png";
 import pawnb from "../assets/pawn_b.png";
@@ -17,43 +17,93 @@ import Tile from "./Tile";
 
 const verticalAxis = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const horizontalAxis = ["a", "b", "c", "d", "e", "f", "g", "h"];
-const pieces = [];
+
+const initialBoard = []
 
 // PIONS BLANC
 for (let i = 0; i < 8; i++) {
-  pieces.push({ image: pawnb, x: i, y: 6 });
+  initialBoard.push({ image: pawnb, x: i, y: 6 });
 }
 // PIONS NOIR
 for (let i = 0; i < 8; i++) {
-  pieces.push({ image: pawnw, x: i, y: 1 });
+  initialBoard.push({ image: pawnw, x: i, y: 1 });
 }
 // TOURS NOIR
-pieces.push({ image: rookb, x: 0, y: 7 });
-pieces.push({ image: rookb, x: 7, y: 7 });
+initialBoard.push({ image: rookb, x: 0, y: 7 });
+initialBoard.push({ image: rookb, x: 7, y: 7 });
 // TOURS BLANCHE
-pieces.push({ image: rookw, x: 0, y: 0 });
-pieces.push({ image: rookw, x: 7, y: 0 });
+initialBoard.push({ image: rookw, x: 0, y: 0 });
+initialBoard.push({ image: rookw, x: 7, y: 0 });
 // CAVALIERS NOIR
-pieces.push({ image: knightb, x: 1, y: 7 });
-pieces.push({ image: knightb, x: 6, y: 7 });
+initialBoard.push({ image: knightb, x: 1, y: 7 });
+initialBoard.push({ image: knightb, x: 6, y: 7 });
 // CAVALIERS BLANC
-pieces.push({ image: knightw, x: 1, y: 0 });
-pieces.push({ image: knightw, x: 6, y: 0 });
+initialBoard.push({ image: knightw, x: 1, y: 0 });
+initialBoard.push({ image: knightw, x: 6, y: 0 });
 //FOUS NOIR
-pieces.push({ image: bishopb, x: 2, y: 7 });
-pieces.push({ image: bishopb, x: 5, y: 7 });
+initialBoard.push({ image: bishopb, x: 2, y: 7 });
+initialBoard.push({ image: bishopb, x: 5, y: 7 });
 //FOUS BLANC
-pieces.push({ image: bishopw, x: 2, y: 0 });
-pieces.push({ image: bishopw, x: 5, y: 0 });
+initialBoard.push({ image: bishopw, x: 2, y: 0 });
+initialBoard.push({ image: bishopw, x: 5, y: 0 });
 //ROYAUX NOIR
-pieces.push({ image: kingb, x: 4, y: 7 });
-pieces.push({ image: queenb, x: 3, y: 7 });
+initialBoard.push({ image: kingb, x: 4, y: 7 });
+initialBoard.push({ image: queenb, x: 3, y: 7 });
 //ROYAUX BLANC
-pieces.push({ image: kingw, x: 4, y: 0 });
-pieces.push({ image: queenw, x: 3, y: 0 });
+initialBoard.push({ image: kingw, x: 4, y: 0 });
+initialBoard.push({ image: queenw, x: 3, y: 0 });
+
+// let activePiece = null
+
+// function grabPiece(e) {
+//   const element = e.target;
+//   if (element.classList.contains("chess-piece")) {
+//     const x = e.clientX - 50;
+//     const y = e.clientY - 50;
+
+//     element.style.position = "absolute"
+//     element.style.left = `${x}px`
+//     element.style.top = `${y}px`
+
+//     activePiece = element
+//   }
+// }
+// function movePiece(e) {
+//   if (activePiece && activePiece.classList.contains("chess-piece")) {
+//     const x = e.clientX - 50;
+//     const y = e.clientY - 50;
+
+//     activePiece.style.position = "absolute"
+//     activePiece.style.left = `${x}px`
+//     activePiece.style.top = `${y}px`
+//   }
+// }
 
 function Chessboard() {
+  const chessBoardRef = useRef(null)
+  const [pieces, setPieces] = useState(initialBoard);
+  const [activePiece, setActivePiece] = useState(false);
   let board = [];
+
+  const dropPiece = (e) => {
+    const chessboard = chessBoardRef.current
+    if (chessboard && activePiece) {
+      const x = Math.floor(e.clientX - chessboard.offsetLeft / 100);
+      const y = Math.floor(e.clientY - chessboard.offsetTop / 100);
+      const newPieces = pieces.map((p) => {
+        if (p.x === 1 && p.y === 0) {
+          p.x = x;
+          p.y = y;
+        }
+        return p;
+      })
+      setPieces(newPieces)
+      console.log(pieces)
+    }
+    setActivePiece(false)
+  }
+
+
 
   for (let j = 0; j < verticalAxis.length; j++) {
     for (let i = 0; i < horizontalAxis.length; i++) {
@@ -66,11 +116,11 @@ function Chessboard() {
         }
       });
 
-      board.push(<Tile number={number} img={image} />);
+      board.push(<Tile dropPiece={dropPiece} constraints={chessBoardRef} key={`${i}, ${j}`} number={number} img={image} />);
     }
   }
 
-  return <ChessContainer>{board}</ChessContainer>;
+  return <ChessContainer ref={chessBoardRef}>{board}</ChessContainer>;
 }
 
 export default Chessboard;

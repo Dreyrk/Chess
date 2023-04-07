@@ -1,20 +1,21 @@
 import React from "react";
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
-function Tile({ number, img }) {
+function Tile({ dropPiece, constraints, number, img, setActivePiece }) {
   const color1 = "white";
   const color2 = "#3a5a40";
 
   if (number % 2 === 0) {
     return (
       <TileCase color={color1}>
-        {img && <ChessPiece src={img} alt="chess-piece" />}
+        {img && <ChessPiece onDragEnd={(e) => dropPiece(e)} onDragEnter={() => setActivePiece(true)} whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
       </TileCase>
     );
   } else {
     return (
       <TileCase color={color2}>
-        {img && <ChessPiece src={img} alt="chess-piece" />}
+        {img && <ChessPiece onDragEnter={() => setActivePiece(true)} whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
       </TileCase>
     );
   }
@@ -31,7 +32,17 @@ const TileCase = styled.span`
   align-items: center;
 `;
 
-const ChessPiece = styled.img`
-  height: 80px;
-  width: 80px;
+const ChessPiece = styled(motion.div)`
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-image: url(${(props) => props.img});
+  background-position: center;
+  background-size: 80px;
+  :hover {
+    cursor: grab;
+  }
+  :active {
+    cursor: grabbing;
+  }
 `;
