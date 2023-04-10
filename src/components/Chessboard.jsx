@@ -14,6 +14,7 @@ import queenw from "../assets/queen_w.png";
 import queenb from "../assets/queen_b.png";
 
 import Tile from "./Tile";
+import { useMotionValue } from "framer-motion";
 
 const verticalAxis = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const horizontalAxis = ["a", "b", "c", "d", "e", "f", "g", "h"];
@@ -82,12 +83,12 @@ initialBoard.push({ image: queenw, x: 3, y: 0 });
 function Chessboard() {
   const chessBoardRef = useRef(null)
   const [pieces, setPieces] = useState(initialBoard);
-  const [activePiece, setActivePiece] = useState(false);
   let board = [];
+  const offset = useMotionValue(0)
 
   const dropPiece = (e) => {
     const chessboard = chessBoardRef.current
-    if (chessboard && activePiece) {
+    if (chessboard) {
       const x = Math.floor(e.clientX - chessboard.offsetLeft / 100);
       const y = Math.floor(e.clientY - chessboard.offsetTop / 100);
       const newPieces = pieces.map((p) => {
@@ -98,9 +99,8 @@ function Chessboard() {
         return p;
       })
       setPieces(newPieces)
-      console.log(pieces)
+      console.log("left", x, "top", y, pieces)
     }
-    setActivePiece(false)
   }
 
 

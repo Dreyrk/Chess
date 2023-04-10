@@ -2,20 +2,20 @@ import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
-function Tile({ dropPiece, constraints, number, img, setActivePiece }) {
+function Tile({ dropPiece, constraints, number, img }) {
   const color1 = "white";
   const color2 = "#3a5a40";
 
   if (number % 2 === 0) {
     return (
       <TileCase color={color1}>
-        {img && <ChessPiece onDragEnd={(e) => dropPiece(e)} onDragEnter={() => setActivePiece(true)} whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
+        {img && <ChessPiece onDragEnd={(e) => dropPiece(e)} whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
       </TileCase>
     );
   } else {
     return (
       <TileCase color={color2}>
-        {img && <ChessPiece onDragEnter={() => setActivePiece(true)} whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
+        {img && <ChessPiece whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
       </TileCase>
     );
   }
