@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
+//Pieces images
 import pawnw from "../assets/pawn_w.png";
 import pawnb from "../assets/pawn_b.png";
 import rookb from "../assets/rook_b.png";
@@ -14,7 +15,6 @@ import queenw from "../assets/queen_w.png";
 import queenb from "../assets/queen_b.png";
 
 import Tile from "./Tile";
-import { useMotionValue } from "framer-motion";
 
 const verticalAxis = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const horizontalAxis = ["a", "b", "c", "d", "e", "f", "g", "h"];
@@ -54,54 +54,37 @@ initialBoard.push({ image: queenb, x: 3, y: 7 });
 initialBoard.push({ image: kingw, x: 4, y: 0 });
 initialBoard.push({ image: queenw, x: 3, y: 0 });
 
-// let activePiece = null
-
-// function grabPiece(e) {
-//   const element = e.target;
-//   if (element.classList.contains("chess-piece")) {
-//     const x = e.clientX - 50;
-//     const y = e.clientY - 50;
-
-//     element.style.position = "absolute"
-//     element.style.left = `${x}px`
-//     element.style.top = `${y}px`
-
-//     activePiece = element
-//   }
-// }
-// function movePiece(e) {
-//   if (activePiece && activePiece.classList.contains("chess-piece")) {
-//     const x = e.clientX - 50;
-//     const y = e.clientY - 50;
-
-//     activePiece.style.position = "absolute"
-//     activePiece.style.left = `${x}px`
-//     activePiece.style.top = `${y}px`
-//   }
-// }
 
 function Chessboard() {
   const chessBoardRef = useRef(null)
   const [pieces, setPieces] = useState(initialBoard);
+  const [currentPiece, setCurrentPiece] = useState(null);
   let board = [];
-  const offset = useMotionValue(0)
 
   const dropPiece = (e) => {
-    const chessboard = chessBoardRef.current
-    if (chessboard) {
-      const x = Math.floor(e.clientX - chessboard.offsetLeft / 100);
-      const y = Math.floor(e.clientY - chessboard.offsetTop / 100);
+    const chessboard = chessBoardRef.current;
+    if (chessboard && currentPiece) {
+      const tileSize = 100;
+      const x = Math.floor((e.clientX - chessboard.offsetLeft) / tileSize);
+      const y = Math.floor((e.clientY - chessboard.offsetTop) / tileSize);
+      const targetOccupied = pieces.some(p => p.x === x && p.y === y);
+      if (targetOccupied) {
+        // If the target position is occupied, do not update the position
+        console.log("The target position is occupied. Invalid move.");
+        return;
+      }
       const newPieces = pieces.map((p) => {
-        if (p.x === 1 && p.y === 0) {
+        if (p === currentPiece) {
           p.x = x;
           p.y = y;
         }
         return p;
-      })
-      setPieces(newPieces)
-      console.log("left", x, "top", y, pieces)
+      });
+      setPieces(newPieces);
+      setCurrentPiece(null);
     }
   }
+
 
 
 
@@ -109,14 +92,16 @@ function Chessboard() {
     for (let i = 0; i < horizontalAxis.length; i++) {
       const number = j + i + 2;
       let image;
+      let piece;
 
       pieces.forEach((p) => {
         if (p.x === i && p.y === j) {
           image = p.image;
+          piece = p;
         }
       });
 
-      board.push(<Tile dropPiece={dropPiece} constraints={chessBoardRef} key={`${i}, ${j}`} number={number} img={image} />);
+      board.push(<Tile key={`${i}, ${j}`} number={number} img={image} piece={piece} onDragStart={() => setCurrentPiece(piece)} dropPiece={dropPiece} constraints={chessBoardRef} />);
     }
   }
 
