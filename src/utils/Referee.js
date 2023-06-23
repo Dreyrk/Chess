@@ -1,13 +1,23 @@
 export default class Referee {
   // Vérifiez si un mouvement est valide
   isValidMove(px, py, x, y, type, color) {
-    console.log("Referee is checking the move...");
     console.log(`Previous location : ${px}, ${py}`);
     console.log(`Current location : ${x}, ${y}`);
     console.log(`Current piece type: ${type}`);
     console.log(`Current piece color: ${color}`);
 
+    const opposingTeam = color === "white" ? "black" : "white";
+
     if (type === "pawn") {
+      if (py === 1) {
+        if (px === x && (y - py === 1 || y - py === 2)) {
+          console.log("valid move");
+          return true;
+        } else {
+          console.log("invalid move");
+          return false;
+        }
+      }
     }
     return false;
   }

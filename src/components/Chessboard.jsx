@@ -15,7 +15,7 @@ import queenw from "../assets/queen_w.png";
 import queenb from "../assets/queen_b.png";
 
 import Tile from "./Tile";
-import Referee from "../utils/Referee";
+import Referee from "../utils/Referee.js";
 
 const verticalAxis = ["1", "2", "3", "4", "5", "6", "7", "8"];
 const horizontalAxis = ["a", "b", "c", "d", "e", "f", "g", "h"];
@@ -77,10 +77,10 @@ function Chessboard() {
     const chessboard = chessBoardRef.current;
     const prevX = Math.floor((e.clientX - chessboard.offsetLeft) / tileSize)
     const prevY = Math.floor((e.clientY - chessboard.offsetTop) / tileSize)
-    console.log(prevX, prevY)
     setGridX(prevX);
     setGridY(prevY);
     setCurrentPiece(piece)
+    console.log(currentPiece)
   }
 
   const dropPiece = (e) => {
@@ -95,9 +95,14 @@ function Chessboard() {
       //UPDATE PIECE POSITION
       const newPieces = pieces.map((p) => {
         if (p === currentPiece) {
-          referee.isValidMove(gridX, gridY, x, y, p.type, p.color)
-          p.x = x;
-          p.y = y;
+          const validMove = referee.isValidMove(gridX, gridY, x, y, p.type, p.color)
+          if (validMove) {
+            p.x = x;
+            p.y = y;
+          } else {
+            p.x = gridX
+            p.y = gridY
+          }
         }
         return p;
       });

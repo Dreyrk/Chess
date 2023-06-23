@@ -9,13 +9,13 @@ function Tile({ dropPiece, constraints, number, img, piece, grabPiece, team }) {
   if (number % 2 === 0) {
     return (
       <TileCase team={team} color={color1}>
-        {img && <ChessPiece onDragStart={(e) => grabPiece(e, piece)} onDragEnd={(e) => dropPiece(e)} whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
+        {img && <ChessPiece onMouseEnter={(e) => grabPiece(e, piece)} onDragEnd={(e) => dropPiece(e)} whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
       </TileCase>
     );
   } else {
     return (
       <TileCase team={team} color={color2}>
-        {img && <ChessPiece onDragStart={(e) => grabPiece(e, piece)} onDragEnd={(e) => dropPiece(e)} whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
+        {img && <ChessPiece onMouseEnter={(e) => grabPiece(e, piece)} onDragEnd={(e) => dropPiece(e)} whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
       </TileCase>
     );
   }
