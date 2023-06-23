@@ -2,20 +2,20 @@ import React from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
-function Tile({ dropPiece, constraints, number, img, piece, onDragStart }) {
+function Tile({ dropPiece, constraints, number, img, piece, grabPiece, team }) {
   const color1 = "white";
   const color2 = "#3a5a40";
 
   if (number % 2 === 0) {
     return (
-      <TileCase color={color1}>
-        {img && <ChessPiece onDragStart={onDragStart} onDragEnd={(e) => dropPiece(e)} whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
+      <TileCase team={team} color={color1}>
+        {img && <ChessPiece onDragStart={(e) => grabPiece(e, piece)} onDragEnd={(e) => dropPiece(e)} whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
       </TileCase>
     );
   } else {
     return (
-      <TileCase color={color2}>
-        {img && <ChessPiece onDragStart={onDragStart} onDragEnd={(e) => dropPiece(e)} whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
+      <TileCase team={team} color={color2}>
+        {img && <ChessPiece onDragStart={(e) => grabPiece(e, piece)} onDragEnd={(e) => dropPiece(e)} whileDrag={{ scale: 1.1 }} drag dragConstraints={constraints} className="chess-piece" img={img}></ChessPiece>}
       </TileCase>
     );
   }
@@ -30,6 +30,7 @@ const TileCase = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
+  transform: ${(props) => props.team === "white" && "rotateX(180deg)"};
 `;
 
 const ChessPiece = styled(motion.div)`
